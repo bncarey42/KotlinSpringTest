@@ -1,6 +1,6 @@
 package com.example.blog
 
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -21,14 +21,18 @@ class IntegrationTests(@Autowired val restTemplate: TestRestTemplate) {
     fun `Assert blog page title, content and status code` () {
         println(">> Assert blog page title, content and status code")
         val entity = restTemplate.getForEntity<String>("/")
-        Assertions.assertThat(entity.statusCode).isEqualTo(HttpStatus.OK)
-        Assertions.assertThat(entity.body).contains("<h1>Blog</h1>")
+        assertThat(entity.statusCode).isEqualTo(HttpStatus.OK)
+        assertThat(entity.body).contains("<h1>Blog</h1>")
     }
 
     //TODO
     @Test
-    fun `Assert artivle page title,m content adn status code`() {
-        println(">> TODO")
+    fun `Assert article page title,m content adn status code`() {
+        println(">> Asset article page title, content and status code")
+        val title = "Reactor Aluminium has landed"
+        val entity = restTemplate.getForEntity<String>("/article/${title.toSlug()}")
+        assertThat(entity.statusCode).isEqualTo(HttpStatus.OK)
+        assertThat(entity.body).contains(title, "Lorem ipsum", "dolor sit amet")
     }
 
     @AfterAll
